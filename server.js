@@ -15,7 +15,10 @@ app.get('/login', (req, res) => {
     if (username == 'admin' && password == 'admin') {
         res.json({success: true, message: 'Login successfully'});
     }
+    else {
+        res.json({success: false, message: 'Login failed'});
+    }
 });
 
 
-app.listen(port, () => {'Server is running on port ' + port});
+app.listen(port, () => {console.log('Server is running on port ' + port)});
