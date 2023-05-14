@@ -10,10 +10,9 @@ app.use(bodyParser.json());
 app.get('/login', (req, res) => {
     let username = req.query.username;
     let password = req.query.password;
-    let email = req.query.email;
 
     if (username == 'admin' && password == 'admin') {
-        res.json({success: true, message: 'Login successfully'});
+        res.json({status: true, email: "email", best_time: 100, games_played: 100, miss_clicked: 10});
     }
     else {
         res.json({success: false, message: 'Login failed'});
