@@ -14,11 +14,12 @@ let pool = createPool({
     database: 'wow'
 });
 
-let dbGet = (sql) => {
-    pool.query(sql, (err, result) => {
+let dbGet = async(sql) => {
+    res = await pool.query(sql, (err, result) => {
         if (err) throw err;
-        return result;
+        return result.rows;
     });
+   return res;
 }
 
 app.get('/login', (req, res) => {
@@ -27,10 +28,9 @@ app.get('/login', (req, res) => {
 
     let sql = `SELECT * FROM users WHERE user_name = '${username}' AND password = '${password}'`;
     console.log(sql);
-    res = dbGet(sql);
-    print(res);
-    if (username == 'admin' && password == 'admin') {
-        res.json({status: true, email: "email", best_time: 100, games_played: 100, missed_clicks: 10});
+    resu = dbGet(sql);
+    if (resu.rows != null) {
+        res.json({status: true, email: resu.email, best_time: resu.best_time, games_played: resu.games_played, missed_clicks: resu.missed_clicks});
     }
     else {
         res.json({status: false, message: 'Login failed'});
