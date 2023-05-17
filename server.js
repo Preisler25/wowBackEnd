@@ -31,6 +31,7 @@ app.get('/endGame', async (req, res) => {
     let best_time = req.query.best_time;
     let missed_clicks = req.query.missed_clicks;
 
+    console.log(best_time);
     let sql = `UPDATE users SET best_time = ${best_time}, games_played = games_played + 1, missed_clicks = missed_clicks + ${missed_clicks} WHERE user_name = '${username}'`;
 
     console.log(sql);
