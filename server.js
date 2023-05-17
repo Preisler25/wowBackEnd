@@ -14,28 +14,49 @@ let pool = createPool({
     database: 'wow'
 });
 
-let dbGet = async(sql) => {
-    res = await pool.query(sql, (err, result) => {
-        if (err) throw err;
-        return result.rows;
+let dbGet = async (sql) => {
+    return new Promise((resolve, reject) => {
+      pool.query(sql, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
     });
-   return res;
-}
-
-app.get('/login', (req, res) => {
+  };
+  
+  app.get('/login', async (req, res) => {
     let username = req.query.username;
     let password = req.query.password;
-
+  
     let sql = `SELECT * FROM users WHERE user_name = '${username}' AND password = '${password}'`;
     console.log(sql);
-    resu = dbGet(sql);
-    if (resu.rows != null) {
-        res.json({status: true, email: resu.email, best_time: resu.best_time, games_played: resu.games_played, missed_clicks: resu.missed_clicks});
+    try {
+      let result = await dbGet(sql);
+      let rows = result.rows;
+  
+      console.log(rows);
+  
+      if (rows.length > 0) {
+        console.log('Login successful');
+        console.log(rows[0]);
+        res.json({
+          status: true,
+          email: rows[0].email,
+          best_time: rows[0].best_time,
+          games_played: rows[0].games_played,
+          missed_clicks: rows[0].missed_clicks
+        });
+      } else {
+        console.log('Login failed');
+        res.json({ status: false, message: 'Login failed' });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      res.json({ status: false, message: 'An error occurred' });
     }
-    else {
-        res.json({status: false, message: 'Login failed'});
-    }
-});
-
+  });
+  
 
 app.listen(port, () => {console.log('Server is running on port ' + port)});
