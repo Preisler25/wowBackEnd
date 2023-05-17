@@ -14,27 +14,26 @@ let pool = createPool({
     database: 'wow'
 });
 
-let dbGet = async (sql) => {
+let dbGet = (sql) => {
     return new Promise((resolve, reject) => {
-      pool.query(sql, (err, result) => {
+      pool.query(sql, (err, rows) => {
         if (err) {
           reject(err);
         } else {
-          resolve(result);
+          resolve(rows);
         }
       });
     });
   };
   
-  app.get('/login', async (req, res) => {
+app.get('/login', async (req, res) => {
     let username = req.query.username;
     let password = req.query.password;
   
     let sql = `SELECT * FROM users WHERE user_name = '${username}' AND password = '${password}'`;
     console.log(sql);
     try {
-      let result = await dbGet(sql);
-      let rows = result.rows;
+      let rows = await dbGet(sql);
   
       console.log(rows);
   
@@ -58,5 +57,4 @@ let dbGet = async (sql) => {
     }
   });
   
-
 app.listen(port, () => {console.log('Server is running on port ' + port)});
