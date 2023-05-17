@@ -26,6 +26,37 @@ let dbGet = (sql) => {
     });
   };
   
+app.get('/endGame', async (req, res) => {
+    let username = req.query.username;
+    let best_time = req.query.best_time;
+    let missed_clicks = req.query.missed_clicks;
+
+    let sql = `UPDATE users SET best_time = ${best_time}, games_played = games_played + 1, missed_clicks = missed_clicks + ${missed_clicks} WHERE user_name = '${username}'`;
+
+    console.log(sql);
+
+    try {
+        let rows = await dbGet(sql);
+
+        console.log(rows);
+
+        if (rows.length > 0) {
+            console.log('Update successful');
+            console.log(rows[0]);
+            res.json({
+                status: true,
+            });
+        } else {
+            console.log('Update failed');
+            res.json({ status: false, message: 'Update failed' });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.json({ status: false, message: 'An error occurred' });
+    }
+});
+
+
 app.get('/login', async (req, res) => {
     let username = req.query.username;
     let password = req.query.password;
