@@ -15,7 +15,7 @@ app.get('/login', (req, res) => {
         res.json({status: true, email: "email", best_time: 100, games_played: 100, miss_clicked: 10});
     }
     else {
-        res.json({success: false, message: 'Login failed'});
+        res.json({status: false, message: 'Login failed'});
     }
 });
 
